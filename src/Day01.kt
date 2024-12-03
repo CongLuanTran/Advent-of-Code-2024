@@ -14,9 +14,7 @@ fun main() {
         a.sort()
         b.sort()
         var total = 0
-        for(i in input.indices) {
-           total += abs(a[i] - b[i])
-        }
+        for(i in input.indices) total += abs(a[i] - b[i])
         return total
     }
 
