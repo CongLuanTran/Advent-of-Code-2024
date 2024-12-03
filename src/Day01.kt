@@ -2,32 +2,28 @@ import kotlin.math.abs
 
 fun main() {
     fun part1(input: List<String>): Int {
-        val a = mutableListOf<Int>()
-        val b = mutableListOf<Int>()
+        val (left, right) = input.map {
+            val first = it.substringBefore(" ").toInt()
+            val second = it.substringAfterLast(" ").toInt()
+            first to second
+        }.unzip()
 
-        input.map {
-            val arr = it.split("\\s+".toRegex())
-            a.add(arr[0].toInt())
-            b.add(arr[1].toInt())
+        return left.sorted().zip(right.sorted()).sumOf { (first, second) ->
+            abs(first - second)
         }
-
-        a.sort()
-        b.sort()
-        var total = 0
-        for(i in input.indices) total += abs(a[i] - b[i])
-        return total
     }
 
     fun part2(input: List<String>): Int {
-        val a = mutableListOf<Int>()
-        val b = mutableMapOf<Int, Int>()
+        val (left, right) = input.map {
+            val first = it.substringBefore(" ").toInt()
+            val second = it.substringAfterLast(" ").toInt()
+            first to second
+        }.unzip()
 
-        input.map {
-            val arr = it.split("\\s+".toRegex())
-            a.add(arr[0].toInt())
-            b[arr[1].toInt()] = b.getOrDefault(arr[1].toInt(), 0) + 1
+        val frequencies = right.groupingBy { it }.eachCount()
+        return left.fold(0) { acc, num ->
+            acc + num * frequencies.getOrDefault(num, 0)
         }
-        return a.sumOf { it * b.getOrDefault(it, 0) }
     }
 
     // Read the input from the `src/Day01.txt` file.
