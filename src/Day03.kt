@@ -1,28 +1,25 @@
 fun main() {
+    val mulReg = Regex("mul\\((\\d{1,3}),(\\d{1,3})\\)")
+    val condReg = Regex("(don't|do)\\(\\)")
+
+    fun mul(input: MatchResult): Long {
+        val (first, second) = input.destructured
+        return first.toLong() * second.toLong()
+    }
+
     fun part1(input: List<String>): Long {
-        val regex = Regex("mul\\((\\d{1,3}),(\\d{1,3})\\)")
-        return input.sumOf { line ->
-            regex.findAll(line).sumOf {
-                it.groupValues[1].toLong() * it.groupValues[2].toLong()
-            }
-        }
+        return input.flatMap { mulReg.findAll(it) }.sumOf { mul(it) }
     }
 
     fun part2(input: List<String>): Long {
-        val regex = Regex("(mul\\((\\d{1,3}),(\\d{1,3})\\))|((don't|do)\\(\\))")
-        var sum = 0L
-        var b = true
-        input.forEach { line ->
-            regex.findAll(line).forEach {
-                val arg = it.value
-                when (arg) {
-                    "do()" -> b = true
-                    "don't()" -> b = false
-                    else -> if (b) sum += it.groupValues[2].toLong() * it.groupValues[3].toLong()
-                }
+        var enabled = true
+        return input.flatMap { "$mulReg|$condReg".toRegex().findAll((it)) }.filter {
+            when (it.value) {
+                "do()" -> enabled = true
+                "don't()" -> enabled = false
             }
-        }
-        return sum
+            enabled && mulReg.matches(it.value)
+        }.sumOf { mul(it) }
     }
 
     // Read the input from the `src/Day01.txt` file.
