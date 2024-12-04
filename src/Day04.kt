@@ -1,5 +1,5 @@
 fun main() {
-    fun search(grid: List<String>, row: Int, col: Int): Int {
+    fun searchXMAS(grid: List<String>, row: Int, col: Int): Int {
         val m = grid.size
         val n = grid[0].length
         var count = 0
@@ -25,18 +25,32 @@ fun main() {
         return count
     }
 
+    fun searchXofMAS(grid: List<String>, row: Int, col: Int): Boolean {
+        val mas = Regex("MAS|SAM")
+        if (grid[row][col] != 'A') return false
+        val diag1 = "" + grid[row - 1][col - 1] + grid[row][col] + grid[row + 1][col + 1]
+        val diag2 = "" + grid[row - 1][col + 1] + grid[row][col] + grid[row + 1][col - 1]
+        return mas.matches(diag1) && mas.matches(diag2)
+    }
+
     fun part1(input: List<String>): Int {
         var count = 0
         for (i in input.indices) {
             for (j in input[0].indices) {
-                count += search(input, i, j)
+                count += searchXMAS(input, i, j)
             }
         }
         return count
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var count = 0
+        for (i in 1..<input.size - 1) {
+            for (j in 1..<input[0].length - 1) {
+                if (searchXofMAS(input, i, j)) count++
+            }
+        }
+        return count
     }
 
     // Read the input from the `src/Day01.txt` file.
