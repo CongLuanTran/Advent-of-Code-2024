@@ -4,7 +4,7 @@ fun main() {
 
     // Regex to get the rules and the updates
     val ruleReg = Regex("""\d+[|]\d+""")
-    val updatereg = Regex("""\d+(,\d+)*""")
+    val updateReg = Regex("""\d+(,\d+)*""")
 
     /*
     Get the rules and turn them into a map. The key are the numbers that
@@ -17,7 +17,7 @@ fun main() {
     /*
     For the update, simply turn them into list
      */
-    val updates = input.filter { updatereg.matches(it) }
+    val updates = input.filter { updateReg.matches(it) }
         .map { it.split(",") }
 
     /*
