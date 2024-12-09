@@ -1,8 +1,6 @@
 import kotlin.time.measureTime
 
 fun main() {
-    val input = readInput("Day07")
-
     fun parseInput(input: List<String>): List<Pair<Long, List<Long>>> {
         return input.map { line ->
             var (value, numbers) = line.split(":")
@@ -50,19 +48,25 @@ fun main() {
 
         fun Long.isProperSuffixOf(other: Long): Boolean {
             // Here we reverse so that is easier to check with indices
-            val thisString = this.toString().reversed()
-            val otherString = other.toString().reversed()
+            val thisString = "$this"
+            val otherString = "$other"
 
             if (thisString.length >= otherString.length) return false
             for (i in thisString.indices) {
-                if (thisString[i] != otherString[i]) return false
+                if (thisString[thisString.length - 1 - i] != otherString[otherString.length - 1 - i]) return false
             }
             return true
         }
 
         fun Long.drop(other: Long): Long {
             check(other.isProperSuffixOf(this))
-            return this.toString().dropLast(other.toString().length).toLong()
+            var dropped = other
+            var dropper = this
+            while (dropped > 0) {
+                dropper /= 10
+                dropped /= 10
+            }
+            return dropper
         }
 
         return numbers.last().isProperSuffixOf(value)
@@ -88,7 +92,10 @@ fun main() {
         }
     }
 
-    part1(input).println()
+    val input = readInput("Day07")
+    measureTime {
+        part1(input).println()
+    }.println()
     measureTime {
         part2(input).println()
     }.println()
