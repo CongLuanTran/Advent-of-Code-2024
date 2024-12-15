@@ -28,7 +28,7 @@ class Point2D(val x: Int, val y: Int) {
 
 }
 
-fun mapPoints(input: List<String>): Map<Char, List<Point2D>> {
+fun mapPoints(input: List<String>): Map <Char, List<Point2D>> {
     return input.flatMapIndexed { y, line ->
         line.mapIndexedNotNull { x, c ->
             if (c == '.') null else c to Point2D(x, y)

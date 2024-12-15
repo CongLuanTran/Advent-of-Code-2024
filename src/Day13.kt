@@ -1,19 +1,19 @@
 import kotlin.time.measureTime
 
-typealias Point = Pair<Long, Long>
+typealias PointL = Pair<Long, Long>
 
 fun main() {
 
-    fun parseLine(line: String): Point {
+    fun parseLine(line: String): PointL {
         val (x, y) = line.split(":")[1].trim().split(",").map { it.split("""[+=]""".toRegex())[1] }
         return x.toLong() to y.toLong()
     }
 
-    fun getMatrixParam(machine: List<String>): List<Point> {
+    fun getMatrixParam(machine: List<String>): List<PointL> {
         return machine.map { parseLine(it) }
     }
 
-    fun solveLinearEquation(a: Point, b: Point, c: Point): Long {
+    fun solveLinearEquation(a: PointL, b: PointL, c: PointL): Long {
         val det = (a.first * b.second - a.second * b.first)
         val detA = c.first * b.second - c.second * b.first
         val detB = a.first * c.second - a.second * c.first

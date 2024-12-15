@@ -2,36 +2,36 @@ fun main() {
 
     fun Long.mod(other: Long) = (this % other + other) % other
 
-    operator fun Point.plus(other: Point) =
+    operator fun PointL.plus(other: PointL) =
         this.first + other.first to this.second + other.second
 
-    operator fun Point.times(num: Long) =
+    operator fun PointL.times(num: Long) =
         this.first * num to this.second * num
 
-    operator fun Point.rem(other: Point) =
+    operator fun PointL.rem(other: PointL) =
         this.first.mod(other.first) to this.second.mod(other.second)
 
-    fun getTiles(p: Point, v: Point, size: Point, times: Long) =
+    fun getTiles(p: PointL, v: PointL, size: PointL, times: Long) =
         (p + v * times) % size
 
 
-    fun parseLine(line: String): Pair<Point, Point> {
+    fun parseLine(line: String): Pair<PointL, PointL> {
         val regex = List(4) { """(-?\d+)""" }.joinToString(".*?").toRegex()
         val (px, py, vx, vy) = regex.find(line)!!.destructured
         return (px.toLong() to py.toLong()) to (vx.toLong() to vy.toLong())
     }
 
-    fun moves(robots: List<Pair<Point, Point>>, size: Point, times: Long) =
+    fun moves(robots: List<Pair<PointL, PointL>>, size: PointL, times: Long) =
         robots.map { getTiles(it.first, it.second, size, times) }
 
-    fun quadrant(robots: List<Point>, size: Point) =
+    fun quadrant(robots: List<PointL>, size: PointL) =
         robots.filterNot { it.first == size.first / 2 || it.second == size.second / 2 }
             .partition { it.first in 0 until size.first / 2 }.toList()
             .flatMap {
                 it.partition { it.second in 0 until size.second / 2 }.toList()
             }
 
-    fun safetyScore(robots: List<Pair<Point, Point>>, size: Point, times: Long): Long {
+    fun safetyScore(robots: List<Pair<PointL, PointL>>, size: PointL, times: Long): Long {
         val positions = moves(robots, size, times)
 
         val (q1, q2, q3, q4) = quadrant(positions, size)
@@ -39,7 +39,7 @@ fun main() {
         return q1.size.toLong() * q2.size.toLong() * q3.size.toLong() * q4.size.toLong()
     }
 
-    fun List<Point>.isTree(count: Int) =
+    fun List<PointL>.isTree(count: Int) =
         this.toSet().size == count
 
     fun part1(input: List<String>): Long {
