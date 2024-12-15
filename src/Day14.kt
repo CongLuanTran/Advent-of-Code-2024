@@ -22,19 +22,25 @@ fun main() {
     }
 
     fun moves(robots: List<Pair<Point, Point>>, size: Point, times: Long) =
-        robots.map { getTiles(it.first,  it.second, size, times) }
+        robots.map { getTiles(it.first, it.second, size, times) }
 
+    fun quadrant(robots: List<Point>, size: Point) =
+        robots.filterNot { it.first == size.first / 2 || it.second == size.second / 2 }
+            .partition { it.first in 0 until size.first / 2 }.toList()
+            .flatMap {
+                it.partition { it.second in 0 until size.second / 2 }.toList()
+            }
 
     fun safetyScore(robots: List<Pair<Point, Point>>, size: Point, times: Long): Long {
         val positions = moves(robots, size, times)
-            .filterNot { it.first == size.first/2 || it.second == size.second/2 }
 
-        val (q12, q34) = positions.partition { it.first in 0 until size.first / 2 }
-        val (q1, q2) = q12.partition { it.second in 0 until size.second / 2 }
-        val (q3, q4) = q34.partition { it.second in 0 until size.second / 2 }
+        val (q1, q2, q3, q4) = quadrant(positions, size)
 
         return q1.size.toLong() * q2.size.toLong() * q3.size.toLong() * q4.size.toLong()
     }
+
+    fun List<Point>.isTree(count: Int) =
+        this.toSet().size == count
 
     fun part1(input: List<String>): Long {
         val size = 101L to 103L
@@ -48,7 +54,7 @@ fun main() {
         var times = 1L
 
         val list = buildList {
-            repeat((size.first *size.second).toInt()) {
+            repeat((size.first * size.second).toInt()) {
                 add(times to safetyScore(robots, size, times++))
             }
         }.toMutableList()
@@ -67,7 +73,19 @@ fun main() {
         }
     }
 
+    fun part2_alt(input: List<String>) {
+        val size = 101L to 103L
+        val robots = input.map { parseLine(it) }
+        var times = 1L
+        val count = robots.size
+        while (times < size.first * size.second) {
+            if (moves(robots, size, times).isTree(count)) break
+            times++
+        }
+        println(times)
+    }
+
     val input = readInput("Day14")
     part1(input).println()
-    part2(input)
+    part2_alt(input)
 }
