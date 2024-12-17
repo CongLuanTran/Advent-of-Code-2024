@@ -1,6 +1,3 @@
-typealias Map2D = List<MutableList<Char>>
-typealias Point = Pair<Int, Int>
-
 fun main() {
 
     val ex = """
@@ -63,9 +60,6 @@ fun main() {
             }
         }
     }
-
-    fun Point.move(direction: Direction) =
-        this.first + direction.x to this.second + direction.y
 
     fun Char.toDirection() =
         when (this) {
